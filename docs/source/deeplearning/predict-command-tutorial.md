@@ -124,6 +124,12 @@ command 只是根据名字，取得对应 model 的指针
 - 单张输入：`src: [image]`
 - 多张输入：`src: [img0, img1, img2]`
 
+```{important}
+如果某个Mat为空，会生成一个 3 x 32 x 32 的占位符图片，用于提交 batch 推理
+
+后续收集结果时会直接跳过 fake 输入对应的输出
+```
+
 ### skip\_all\_NA 
 > 此项开启时，当前序flow判定所有通道都为NA时，直接跳过
 
@@ -214,9 +220,9 @@ crop:
 ```
 存储格式：`basename-s<slice\_id>-<box>.png` 
 
-> [!WARNING]
->
-> 2025-06-04 目前应该存在bug，会将所有predictions都裁切保存，而不是filter后的
+```{warning} 
+2025-06-04 目前应该存在bug，会将所有predictions都裁切保存，而不是filter后的
+```
 
 ### which\_detector   
 > 用于指定该command在 detector#.yaml中对应哪个detector   
