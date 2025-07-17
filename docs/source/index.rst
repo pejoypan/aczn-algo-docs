@@ -13,5 +13,4 @@ Contents
    :maxdepth: 2
    :caption: Sections
 
-   usage
    deeplearning/index
