@@ -103,9 +103,12 @@ init:
 ```
 则这里填 `model: best\_yolov8n` 
 
-```{note}
+```{warning}
+
 command 并不负责模型的初始化工作
+
 模型的初始化统一在 InspectProcessor::initialize\_generic 中进行
+
 command 只是根据名字，取得对应 model 的指针
 ```
 
