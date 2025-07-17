@@ -103,23 +103,20 @@ init:
 ```
 则这里填 `model: best\_yolov8n` 
 
-> [!NOTE]
->
-> command 并不负责模型的初始化工作
->
-> 模型的初始化统一在 InspectProcessor::initialize\_generic 中进行
->
-> command 只是根据名字，取得对应 model 的指针
+:::{note}
+command 并不负责模型的初始化工作
+模型的初始化统一在 InspectProcessor::initialize\_generic 中进行
+command 只是根据名字，取得对应 model 的指针
+:::
 
 - 该关键字支持tag   
   
 ### src   
 > 输入，用于标志输入图片的名字，必须为 sequence 格式   
 
-> [!NOTE]
->
-> 动态模式下，num == src.size
->
+:::{note}
+动态模式下，num == src.size
+:::
 
 - 单张输入：`src: [image]`
 - 多张输入：`src: [img0, img1, img2]`
@@ -275,9 +272,9 @@ crop:
   
 
 ## 同步推理 predict 与 异步推理的转换   
-> [!NOTE]
->
-> 所有 predict 支持的选项，异步推理command也同步支持 
+:::{note}
+所有 predict 支持的选项，异步推理command也同步支持 
+:::
 
 假设现有同步模式flow:   
 
