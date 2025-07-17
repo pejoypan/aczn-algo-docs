@@ -2,8 +2,6 @@ Welcome to ACZN Algo documentation!
 ===================================
 
 
-TODO
-
 .. note::
 
    TODO
@@ -12,5 +10,8 @@ Contents
 --------
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Sections
 
    usage
+   deeplearning/index
