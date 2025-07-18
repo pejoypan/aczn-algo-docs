@@ -1,9 +1,9 @@
 Capsule Calibration Procedure
 ========================
 
-# Before Start 🔥
+## Before Start 🔥
 
-## Preparation
+### Preparation
 
 Adjust Camera 📷 setting to best
 
@@ -11,7 +11,7 @@ Adjust PLC setting to best
 
 Prepare 1000~5000 freshly produced capsules💊
 
-## Capture Capsule Pictures🖼️
+### Capture Capsule Pictures🖼️
 
 Switch to "Capture Mode"
 
@@ -23,7 +23,7 @@ or
 
 Press "▶️Start"
 
-## Capture Empty Capsule (if needed)
+### Capture Empty Capsule (if needed)
 
 If you want to do quantity inspection (filled or empty)
 
@@ -33,7 +33,7 @@ Prepare about 200 empty capsules
 
 Capture it
 
-## Identify your capsule
+### Identify your capsule
 
 Identify these attributes
 
@@ -41,11 +41,11 @@ Identify these attributes
 - Printed or not (cap/body)
 - Clear or opaque
 
-# Start Calibration🔥
+## Start Calibration🔥
 
-## Start From Zero
+### Start From Zero
 
-### Basic Settings ⚙️
+#### Basic Settings ⚙️
 
 1. Read the welcome message comprehensively
    1. If you cannot find it, click the ❔ at upper right corner
@@ -57,7 +57,7 @@ Identify these attributes
 3. Select Reference Template
 4. Next page
 
-### Select Picture 🖼️
+#### Select Picture 🖼️
 
 > only in first stage
 
@@ -67,13 +67,13 @@ A dialog will appear and you can select a picture
 
 🚫 **Do not select picture with all same direction capsules**
 
-### Configuration stage by stage
+#### Configuration stage by stage
 
-#### Clarify Stage Goal🏁
+##### Clarify Stage Goal🏁
 
 Stage goal will show at upper left corner↖️
 
-#### Modify Values🔢
+##### Modify Values🔢
 
 There are 4 ways to modify values:
 
@@ -82,7 +82,7 @@ There are 4 ways to modify values:
 - click slider side: click at the side of the handle (±10/per click)
 - mouse wheel🖱️: hover over the slider and use mouse wheel
 
-#### Switch Display Level 
+##### Switch Display Level 
 
 There are 3 display level:
 
@@ -92,13 +92,13 @@ There are 3 display level:
 
 for various level users.
 
-#### Need Help?
+##### Need Help?
 
 Click the ❔ at upper right corner↗️
 
 There will be a help page for current stage
 
-#### Picture Display Window
+##### Picture Display Window
 
 - Zoom in/out:
   - Click 🔍➕➖
@@ -109,24 +109,24 @@ There will be a help page for current stage
 - Fit
   - Display picture fit to window
 
-#### Forget the Original Look ？😵‍💫
+##### Forget the Original Look ？😵‍💫
 
 Click the 🖼️ at upper right corner↗️
 
-## Start From Existing Recipe (skip configuration)
+### Start From Existing Recipe (skip configuration)
 
 > also called "recipe adaptation"
 
-### At Welcome Page
+#### At Welcome Page
 
 1. Open the "Reference Template" drop-down box
 2. Select your existing recipe
 3. Tick✅ the "Generate Directly" checkbox
 4. Next Page
 
-# Start Model Building🔧
+## Start Model Building🔧
 
-## Basic Settings⚙️
+### Basic Settings⚙️
 
 Enter
 
@@ -142,7 +142,7 @@ Enter
 
   > ❗refer to the front photo times
 
-## Select Images
+### Select Images
 
 1. Press the ➕
 2. Select the folder📁 you just captured
@@ -161,7 +161,7 @@ Enter
 
 > if you select the wrong folder📁, click "reset images"
 
-## Backlight Modeling
+### Backlight Modeling
 
 If you want to do quantity inspection (filled or empty)
 
@@ -179,7 +179,7 @@ Double click the new window and select the corresponding picture
 >
 > ⚠️ Should be no empty channel
 
-## Press “Prepare for modeling”
+### Press “Prepare for modeling”
 
 A progress bar will show up
 
@@ -189,5 +189,5 @@ After model building successfully
 
 You can save the new recipe as reference template💾
 
-# Now you can find the new recipe in "Model Setting"
+## Now you can find the new recipe in "Model Setting"
 
