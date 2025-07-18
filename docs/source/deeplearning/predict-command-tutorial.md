@@ -47,6 +47,23 @@
 
 动态模式下：`num == src.size`
 
+### Defect Policy
+
+> 用于定义每个class是否被当作defect对待
+
+- 正常模式(normal)：所有class都被当作defect
+- 混合模式(mixed): 部分class被当作defect
+- 仅推理模式(none): 所有class都不被当作defect
+
+进入哪种模式取决于 `defect_policy` 的输入
+
+```{important}
+在混合模式下，一个class被当作缺陷必须同时满足两个条件：
+
+1. 该 class 本身是缺陷
+2. 这个 slice 的推理结果中，存在不是缺陷的class
+```
+
 ## 使用场景   
 ### 场景A. 输入为1~N张图片 尺寸不确定    
 > 如胶囊正面检、胶囊侧面检、片剂正面检、片剂侧面检。图片由前序步骤抠出来   
@@ -137,6 +154,9 @@ command 只是根据名字，取得对应 model 的指针
 - 默认为 true
 
 ### just\_infer
+```{warning}
+即将被弃用(当前版本低优先级工作)，使用新接口 `defect_policy`
+```
 > 此项开启时，command只做推理，不修改m_result_
 
 - bool 型，可填 true or false
@@ -145,7 +165,10 @@ command 只是根据名字，取得对应 model 的指针
     - 不会修改 m\_result\_ 
     - 会将 predictions 以 InferObject 形式放入 outputs 节点
 
-### not\_defect   
+### not\_defect
+```{warning}
+即将被弃用(当前版本低优先级工作)，使用新接口 `defect_policy`
+```
 > 用于标志哪些class不作为缺陷处理   
 
 - 默认为空   
@@ -155,17 +178,46 @@ command 只是根据名字，取得对应 model 的指针
     - 不会进入 m\_result\_   
     - 会进入 outputs (如果存在) 
 
+### defect\_policy
+> 用于标志每个class是否被当作defect对待的策略
+
+- 支持的选项：
+  - 正常模式：`defect_policy: normal`
+  - 仅推理模式：`defect_policy: none`
+  - 混合模式：
+    ```yaml
+    defect_policy:
+      class_0: true   # 该class被当作缺陷
+      class_1: false  # 该class不被当作缺陷
+    ```
+- 默认为正常模式
+
+在 initialize 中，会根据 DefectPolicyTable 的内部数据，确定最终的 defect_policy
+
 ### prepend\_result   
 > 若此项开启，在修改m_result_时，预测的结果会插入到头部，而不是尾部   
 
 - bool 型，可填 true or false   
 - 默认为 false 
 
-### dynamic\_shapes   
+### dynamic\_shapes
+```{warning}
+即将被弃用(当前版本低优先级工作)，使用新接口 `input_shape`
+```
 > 此项开启时，强制进入动态模式   
 
 - bool型，可填 true or false   
 - 无默认值，没有该节点时不会触发相关逻辑
+
+### input\_shape
+
+> 指定输入的shape模式
+
+支持的选项：
+
+- `input\_shape: fixed`: 进入固定模式
+- `input\_shape: dynamic`: 进入动态模式
+- 默认为动态模式
 
 ### slices   
 > 在固定模式下，用于将输入的单张图片切成多份   

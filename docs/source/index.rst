@@ -14,3 +14,4 @@ Contents
    :caption: Sections
 
    deeplearning/index
+   changelog
