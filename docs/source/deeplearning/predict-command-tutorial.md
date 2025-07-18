@@ -215,8 +215,8 @@ command 只是根据名字，取得对应 model 的指针
 
 支持的选项：
 
-- `input\_shape: fixed`: 进入固定模式
-- `input\_shape: dynamic`: 进入动态模式
+- `input_shape: fixed`: 进入固定模式
+- `input_shape: dynamic`: 进入动态模式
 - 默认为动态模式
 
 ### slices   
