@@ -172,7 +172,7 @@ command 只是根据名字，取得对应 model 的指针
 > 用于标志哪些class不作为缺陷处理   
 
 - 默认为空   
-- 标准格式：`not\_defect: [class\_0, class\_1, …]`   
+- 标准格式：`not_defect: [class_0, class_1, …]`   
 - not\_defect内的class：   
     - 不会画在画布上   
     - 不会进入 m\_result\_   
@@ -270,7 +270,7 @@ crop:
   save: true/false  # bool 型开关，默认为false
   padding: 5        # 边界 padding 的像素尺寸，默认为0
 ```
-存储格式：`basename-s<slice\_id>-<box>.png` 
+存储格式：`basename-s<slice_id>-<box>.png` 
 
 ```{warning} 
 2025-06-04 目前应该存在bug，会将所有predictions都裁切保存，而不是filter后的
@@ -279,19 +279,19 @@ crop:
 ### which\_detector   
 > 用于指定该command在 detector#.yaml中对应哪个detector   
 
-如果该节点不存在，默认为 `infer\_detector` 
+如果该节点不存在，默认为 `infer_detector` 
 
 ### seg\_mask   
 > 用于输出一张绘制着预测结果的mask   
 
-标准格式：`seg\_mask: predict\_mask`   
+标准格式：`seg_mask: predict_mask`   
 如果该节点存在，每次执行时：   
-1. 会生成一张8UC1的图像，放在 `m\_container[predict\_mask]` 中   
+1. 会生成一张8UC1的图像，放在 `m_container[predict_mask]` 中   
 2. 对图像清零 （全部赋0）   
 3. 对于不同的模型：   
     1. 分割模型：绘制轮廓（填充）   
     2. 检测模型：绘制方框（填充）   
-4. 绘制使用的灰度为 `255 - label\_id`   
+4. 绘制使用的灰度为 `255 - label_id`   
     > 即，对于class_0，以255绘制；对于class_1，以254绘制；… 
 
 
@@ -371,7 +371,7 @@ crop:
 - async\_infer\_fetch：   
     - 负责获取推理结果   
 - 每对 command 以下参数必须一致：   
-    - `INTERNAL\_ENGINE\_KEY `保证其使用同一个engine   
+    - `INTERNAL_ENGINE_KEY `保证其使用同一个engine   
     - `uuid ` 用于保证task的唯一性 （范围0~9）   
 
 
@@ -379,7 +379,7 @@ crop:
 
 ## 使用inspect\_app时的相关arguments 
 
-### `--save\_yolo`
+### `--save_yolo`
 参见 [使用 inspect\_app 将 predictions 保存为 yolo 格式](https://pejoypan.any.org/inspect-app-save-yolo) 
 
 ## infer\_detector 设置
