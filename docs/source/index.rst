@@ -13,4 +13,6 @@ Contents
    :maxdepth: 1
 
    deeplearning/index
+   cim/index
+   tcim/index
    changelog
