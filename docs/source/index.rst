@@ -10,8 +10,7 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Sections
+   :maxdepth: 1
 
    deeplearning/index
    changelog
