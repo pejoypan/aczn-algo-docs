@@ -4,5 +4,5 @@
 .. toctree::
    :maxdepth: 1
 
-    capsule-calibration-procedure
-    force-kick-adjust
+   capsule-calibration-procedure
+   force-kick-adjust
