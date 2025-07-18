@@ -1,4 +1,6 @@
-## 2025-07-18
+# Changelog
+
+### 2025-07-18
 
 - 针对 InferEngine 的重构：
     - 引入枚举量 ShapeMode, 代替并统一 fixed_roi, dynamic_shapes 等接口
