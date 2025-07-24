@@ -2,9 +2,9 @@
 
 ## 常规模板加工成"有片踢没片不踢"
 
-detectors#0.yaml 
-
+1. 将面积下限设置为2.0 (为了让所有合格片都报缺陷)
 ```yaml
+# detectors#0.yaml
 tablet_detector:
   use: 1
   parameters:
@@ -15,9 +15,10 @@ tablet_detector:
         lb: 2.0 # 0.9->2.0
 ```
 
-conf_inspect.yaml
+2. 将 missing_return_ng 设为 0 （为了让NA返回Good结果）
 
 ```yaml
+# conf_inspect_0.yaml
 init:
   mode: inspect
   parameter: params00.yaml
@@ -32,4 +33,4 @@ init:
 
 ## 常规模板加工成"有片不踢没片踢"
 
-所有detectors#.yaml中的```is_use```改为false
+将所有detectors#.yaml中的```is_use```改为false（为了让所有片都不报缺陷）

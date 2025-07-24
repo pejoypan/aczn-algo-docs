@@ -26,34 +26,15 @@
 
 ## 准备unwrap图
 
-### 生成图片路径列表
-
-```shell
-python list_images.py data/1 0.txt
-python list_images.py data/2 1.txt
-python list_images.py data/3 2.txt
-```
-
-### 根据曝光次数删掉多余图片
-
-假设曝光为6次
-
-```shell
-sed -i "/e6/d" 0.txt # 删掉背光检图片
-sed -i "/e7/d" 0.txt # 删掉字符检图片
-sed -i "/e6/d" 1.txt
-sed -i "/e7/d" 1.txt
-sed -i "/e6/d" 2.txt
-sed -i "/e7/d" 2.txt
-```
-
 ### 跑图片生成unwrap图
 
 ```shell
-inspect_app.exe -c conf_inspect.yaml -p params0.yaml -l 0.txt --NA_return_NG=false --save_unwrap=true --save=false
+inspect_app.exe -c conf_inspect.yaml -p params0.yaml -f data/1 --NA_return_NG=false --save_unwrap=true --save=false
 ```
 
+```{important}
 此时应该把缺陷检测放松，只检测很大的缺陷（待开发）
+```
 
 ```shell
 mkdir text
@@ -137,7 +118,7 @@ darker_text: 1 # 如果字符比背景深填1，比背景浅填0
 #### 生成建模图片列表
 
 ```shell
-python list_images.py text text.txt png
+inspect_app.exe --list_images=text,text.txt,png
 copy text.txt text_cal.txt
 sed -i "7,$ d" text_cal.txt   # 假设拍照次数为6
 ```
