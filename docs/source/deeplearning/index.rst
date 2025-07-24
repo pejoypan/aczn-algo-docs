@@ -5,3 +5,4 @@
    :maxdepth: 1
 
    predict-command-tutorial
+   infer-detector-setting
