@@ -4,7 +4,7 @@ Welcome to ACZN Algo documentation!
 
 .. note::
 
-   TODO
+   version: 3.9.6
 
 Contents
 --------
