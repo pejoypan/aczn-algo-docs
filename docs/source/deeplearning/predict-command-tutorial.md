@@ -384,7 +384,7 @@ crop:
 
 ## infer\_detector 设置
 
-参见 [https://pejoypan.any.org/infer-detector](https://pejoypan.any.org/infer-detector)    
+参见 [infer-detector-setting](infer-detector-setting.md)    
 
 ## TODOs 
 
