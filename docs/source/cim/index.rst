@@ -8,3 +8,4 @@
    force-kick-adjust
    capsule-text-manual-calibration-sop
    crop-capsule-use-inspect-app
+   cim-non-spin-detection
