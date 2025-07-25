@@ -109,8 +109,8 @@ capsule_detector:
 ### threshold
 
 在做过图像对齐之后，会对两帧图像做absdiff，之后再做阈值化。
-因此 
-`相似度 = 1.0 - 像素数量（灰度>threshold）/ 总像素数量`
+
+因此 `相似度 = 1.0 - 像素数量（灰度>threshold）/ 总像素数量`
 
 threshold 用于控制相似度计算的敏感度，数值越低越敏感。
 
