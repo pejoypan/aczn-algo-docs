@@ -10,3 +10,4 @@
    crop-capsule-use-inspect-app
    cim-non-spin-detection
    image-split-model-conversion
+   cim-text-inspect-tutorial
