@@ -9,3 +9,4 @@
    capsule-text-manual-calibration-sop
    crop-capsule-use-inspect-app
    cim-non-spin-detection
+   image-split-model-conversion
