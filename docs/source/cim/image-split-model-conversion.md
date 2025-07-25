@@ -1,6 +1,6 @@
 # CIM 图像拆分 模型转换
 
-[convert_cim_params](image-split-model-conversion/convert_cim_params.exe)
+[下载 convert_cim_params.exe](image-split-model-conversion/convert_cim_params.exe)
 
 ## 用法
 
