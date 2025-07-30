@@ -361,18 +361,22 @@ crop:
     - async_infer_fetch:
         INTERNAL_ENGINE_KEY: async_engine
         uuid: 0
-        src: [img0, img1, img2]  # save_yolo 模式下会用到
         def_src: image
         def_img: cap_defect
 ```
-- async\_infer\_submit:   
-    - 负责engine的初始化，因此应带上所有的参数选项   
+
+- `async_infer_submit`:   
+    - 负责engine的初始化，因此应带上绝大多数的参数选项
     - 负责提交推理请求   
-- async\_infer\_fetch：   
-    - 负责获取推理结果   
-- 每对 command 以下参数必须一致：   
-    - `INTERNAL_ENGINE_KEY `保证其使用同一个engine   
-    - `uuid ` 用于保证task的唯一性 （范围0~9）   
+- `async_infer_fetch`：   
+    - 负责获取推理结果
+    - 以下参数应带到 `async_infer_fetch` 中：
+        - `outputs`（如有）
+        - `def_src`
+        - `def_img`
+- 以下参数需同时添加且保持一致：   
+    - `INTERNAL_ENGINE_KEY`
+    - `uuid`: 用于保证task的唯一性，范围0~9   
 
 
 ---
