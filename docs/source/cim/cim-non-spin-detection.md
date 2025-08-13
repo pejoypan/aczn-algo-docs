@@ -28,6 +28,20 @@ aczn-algo >= 3.9.1
 新算法目前只支持独立使用
 ```
 
+1. conf_inspect.yaml 需支持字符检
+```yaml
+# conf_inspect.yaml
+    ...
+
+    - capsule_detect:
+        ...
+        unwrap_src: image_L # 该节点必须存在
+        ...
+    
+    ...
+```
+
+2. 打开字符检功能，并使用如下yaml
 ```yaml
 # conf_inspect-printing.yaml
 init:
@@ -59,6 +73,7 @@ flow:
           scale: 0.5                  # downsample的scale
 ```
 
+3. 如需调参，增加如下选项
 ```yaml
 # detectors0.yaml
 capsule_detector:
