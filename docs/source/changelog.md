@@ -1,5 +1,11 @@
 # 📑 Changelog
 
+### 2025-08-21
+
+- 开发 background_subtract 命令
+- 开发 distance_transform 命令
+- 开发 count 命令
+
 ### 2025-07-30
 
 - 优化 extract_objects 命令：
