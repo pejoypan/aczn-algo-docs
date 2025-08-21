@@ -527,3 +527,37 @@ lhs and rhs must have the same size.
 | dst_rect  | ✅         | The list of Rect on dst            | [x, y, w, h]                             |
 | dst_pts   | ✅         | The list of points(size:3) on dst  | [[x1, y1], [x2, y2], [x3, y3]] (size==3) |
 
+## background_subtract
+
+基于背景减法的运动前景分割，用于从图像序列中提取运动前景目标。该算法通过建立背景模型，将当前帧与背景模型进行比较，检测出前景运动物体。
+
+```yaml
+    - background_subtract:
+        src: image            # input, should be 8-bit
+        dst: fg_mask          # output foreground, 8-bit binary
+        params:
+          type: MOG2          # algo types, support: [MOG2, KNN]
+          history: 500        # last N frames that affect background model
+          var_threshold: 20   # variance threshold for background model
+          n_mixtures: 2       # number of Gaussian components in the background model
+          learning_rates: [1.0, 0.95, 0.8, 0.6, 0.4, 0.25, 0.135, 0.065, 0.03, 0.01] 
+          detect_shadows: false     # shadow detection
+          min_learning_rate: 0.001  # the stable learning rate after learning_rates
+          pre_learn_datas:          # optional. If set, will pre-learn from with these datas
+            - D:/image_data/v-counter/1/0000.bmp
+```
+
+| 参数名 | 类型 | 取值范围 | 默认值 | 描述 |
+|--------|------|----------|--------|------|
+| **type** | string | [MOG2, KNN] | MOG2 | 背景建模算法类型 |
+| **history** | int | [1, 10000] | 500 | 用于训练背景模型的历史帧数，值越大背景更新越慢 |
+| **var_threshold** | float | [1, 1000] | 16.0 | 方差阈值，用于像素分类为前景/背景，值越小检测越敏感 |
+| **n_mixtures** | int | [1, 5] | 2 | 高斯混合模型中的高斯分量数量 |
+| **learning_rates** | array | [0.0, 1.0] | [1.0] | 初始学习率序列（假定刚开始的时候通常没有运动目标） |
+| **min_learning_rate** | float | [0.0, 1.0] | 0.001 | 初始学习率之后的稳定学习率 |
+| **pre_learn_datas** | array | - | [] | 预训练图像路径列表，用于初始化背景模型 |
+| **detect_shadows** | bool | - | false | 是否检测阴影 |
+
+在最初始的N帧(N==learning_rates.size)中，模型会根据 learning_rates 对每一帧进行学习。学习完成后，模型会根据 min_learning_rate 进行稳定学习。
+
+如果存在 pre_learn_datas, learning_rates 也会被消耗
