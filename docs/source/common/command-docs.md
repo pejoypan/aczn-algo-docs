@@ -558,6 +558,38 @@ lhs and rhs must have the same size.
 | **pre_learn_datas** | array | - | [] | 预训练图像路径列表，用于初始化背景模型 |
 | **detect_shadows** | bool | - | false | 是否检测阴影 |
 
-在最初始的N帧(N==learning_rates.size)中，模型会根据 learning_rates 对每一帧进行学习。学习完成后，模型会根据 min_learning_rate 进行稳定学习。
+- 在最初始的N帧(N==learning_rates.size)中，模型会根据 learning_rates 对每一帧进行学习。
+- 学习完成后，模型会根据 min_learning_rate 进行稳定学习。
+- 如果存在 pre_learn_datas, 则 learning_rates 会先被消耗
 
-如果存在 pre_learn_datas, learning_rates 也会被消耗
+
+## distance_transform
+
+计算图像中每个像素到最近零像素的距离，生成距离变换图。可用于形态学分析、骨架提取、粘连轮廓分割等
+
+```yaml
+    - distance_transform:
+        src: binary_mask   # 输入图像，应为8位单通道二值图像
+        dst: distance_map  # 输出图像，8位单通道 (已归一化到0-255)   
+        params:
+          type: DIST_L2    # 距离类型，支持: [DIST_L1, DIST_L2, DIST_C]
+          ksize: [5, 5]    # 掩膜大小，影响计算精度
+```
+
+| 参数名 | 类型 | 取值范围 | 默认值 | 描述 |
+|--------|------|----------|--------|------|
+| **type** | string | [DIST_L1, DIST_L2, DIST_C] | DIST_L2 | 距离计算类型 |
+| **ksize** | array/int | [3, 5, 0] | [3, 3] | 距离变换掩膜尺寸 |
+
+### 距离类型说明
+- **DIST_L1**: 曼哈顿距离 (|x1-x2| + |y1-y2|)
+- **DIST_L2**: 欧几里得距离 (√((x1-x2)² + (y1-y2)²))
+- **DIST_C**: 切比雪夫距离 (max(|x1-x2|, |y1-y2|))
+
+### 注意事项
+- 当 type 为`DIST_C`或`DIST_L1`时，ksize强制为3 (因为更大也不会提升性能)
+- 当 type 为`DIST_L2`时，ksize 越大越精确
+- 当 ksize:
+    - width == 3 时，maskSize 取 cv::DIST_MASK_3
+    - width == 5 时，maskSize 取 cv::DIST_MASK_5
+    - 其他情况，maskSize 取 cv::DIST_MASK_PRECISE
