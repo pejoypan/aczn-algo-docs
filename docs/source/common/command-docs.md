@@ -576,20 +576,66 @@ lhs and rhs must have the same size.
           ksize: [5, 5]    # 掩膜大小，影响计算精度
 ```
 
+```{important}
+输出的map已经根据minmax归一化到0-255
+```
+
 | 参数名 | 类型 | 取值范围 | 默认值 | 描述 |
 |--------|------|----------|--------|------|
 | **type** | string | [DIST_L1, DIST_L2, DIST_C] | DIST_L2 | 距离计算类型 |
 | **ksize** | array/int | [3, 5, 0] | [3, 3] | 距离变换掩膜尺寸 |
 
-### 距离类型说明
+**距离类型说明**
 - **DIST_L1**: 曼哈顿距离 (|x1-x2| + |y1-y2|)
 - **DIST_L2**: 欧几里得距离 (√((x1-x2)² + (y1-y2)²))
 - **DIST_C**: 切比雪夫距离 (max(|x1-x2|, |y1-y2|))
 
-### 注意事项
+**注意事项**
 - 当 type 为`DIST_C`或`DIST_L1`时，ksize强制为3 (因为更大也不会提升性能)
 - 当 type 为`DIST_L2`时，ksize 越大越精确
 - 当 ksize:
     - width == 3 时，maskSize 取 cv::DIST_MASK_3
     - width == 5 时，maskSize 取 cv::DIST_MASK_5
     - 其他情况，maskSize 取 cv::DIST_MASK_PRECISE
+
+
+## count
+
+用于提取 mask 中的前景目标并计数（报告缺陷）
+
+```yaml
+# conf_inspect.yaml
+    - count:
+        src: mask           # 输入图像, 8-bit binary
+        def_src: image
+        def_img: count_def
+        params:
+          rois:
+            - [148, 64, 267, 640]
+            - [518, 64, 289, 640]
+            - [872, 64, 290, 640]
+            - [1260, 64, 261, 640]
+          idxs: [0, 1, 2, 3] # 每个roi对应的通道索引
+          defname: "your-custom-name"
+```
+
+```yaml
+# detectors.yaml
+count_detector:
+  use: 1
+  parameters:  # 与 infer_detector 单个class相同
+    area: [1000, 9999999]
+    shortside: [12, 9999]
+    longside: [20, 9999]
+    dist2edge_x: [0.0, 1.0]
+    dist2edge_y: [0.0, 1.0]
+```
+
+```yaml
+# params.yaml
+tablet:
+  num: 4  # 提前定义好通道数，以正确初始化 m_result_ 
+```
+
+- flow 中支持 tag
+- detector 中的格式与 infer_detector 中的单个class内容相同
