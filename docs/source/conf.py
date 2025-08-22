@@ -7,7 +7,7 @@ copyright = '2025, Pejoy Pan'
 author = 'Pejoy Pan'
 
 release = '0.1'
-version = '3.9.7'
+version = '3.9.10'
 
 # -- General configuration
 
