@@ -4,7 +4,7 @@ Welcome to ACZN Algo documentation!
 
 .. note::
 
-   version: 3.9.7
+   version: 3.9.10
 
 Contents
 --------
