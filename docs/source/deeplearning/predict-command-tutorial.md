@@ -1,6 +1,6 @@
 # Predict Command Tutorial   
 ## predict 基本功能   
-```
+```yaml
     - predict:
         model: model              # 在此处指定模型(infer_models中路径的stem)，支持tag
         src: [image]              # 输入图像
@@ -15,6 +15,12 @@
           - [x, y, w, h]
         idxs: [0, 1, 2, ...]      # 配置小图/slice与结果的映射关系，支持tag
         def_pos: [top, btm, ...]  # 定义每个slice的位置str，只在片剂检中使用
+        section_rois:             # 针对slat等，结果有两层结构时使用
+          -                       # 对应 slices[0]
+            - [x, y, w, h]
+          -                       # 对应 slices[1]
+            - [x, y, w, h]
+        section_rois:
         crop:                     # 调试用，用于将prediction裁切并存储为png
           save: true/false        # crop save 开关
           padding: 5              # crop save 时的 padding
@@ -250,6 +256,58 @@ idxs: [0, 1, 2, ...] # size == num
 ```
 - 动态模式下，映射src中元素的index   
 - 固定模式下，映射slices中元素的index
+
+### section_rois
+> 针对 Slat 等机型设计，用于标明每个channel内部的roi范围，以适配带有双层结构的结果
+
+```{note}
+使用时，通常需要 `test_mode: 1` (针对NA+NG情况：当内层结果仍有Good时，外层可能已经全部NG，如果不开启会直接结束检测)
+```
+
+**标准格式**
+```yaml
+# assert section_rois.size == slices.size
+section_rois:
+  -   # 对应slices[0]
+    - [x, y, w, h]
+    - [x, y, w, h]
+    - [x, y, w, h]
+  -   # 对应slices[1]
+    - [x, y, w, h]
+    - [x, y, w, h]
+    - [x, y, w, h]
+```
+
+- **当该节点存在**：InferEngine 工作在 `section_result_mode`, 所有结果更新到**内层**
+- **内层id的确认**：为 prediction 寻找距离最近的 section_roi
+- **ROI越界判断**：所有 roi 应 in slice，若出现会记录ERROR日志，但**不会** `return false`
+
+```yaml
+# 示例结果 通道数: 2 每个通道section数: 3
+inspection:
+  - id: 0
+    type: Good
+    inspection:
+      - id: 0
+        type: Good
+      - id: 1
+        type: Good
+      - id: 2
+        type: Good
+  - id: 1
+    type: Good
+    inspection:
+      - id: 0
+        type: Crack,confidence=0.69,box=[751,189,78,51]@
+      - id: 1
+        type: Good
+      - id: 2
+        type: Good
+```
+
+```{important}
+通常还需在后续搭配 `- update_SIM_result: {}` 以更新外层结果
+```
 
 ### def\_pos   
 > 标志每张图片/每个slice对应的def_pos，目前仅用于TCIM跑马灯显示效果   
