@@ -47,12 +47,11 @@ aczn-algo >= 3.10.1
             ksize:
               - [1, 1]
               - [1, 1]
-          joint_range:                    # 接缝的相对位置：格式: [ystart, yend] 相对值，范围: [0, 1] (图像中胶囊的最高点为0.0, 最低点为1.0)
-            upper_positive: [0.53, 0.62]  # 上排帽在上
+          joint_range:                    # 接缝的相对位置 *1
             upper_negative: [0.47, 0.56]  # 上排帽在下
             lower_positive: [0.43, 0.52]  # 下排帽在上
             lower_negative: [0.38, 0.45]  # 下派帽在下
-          text_range:                     # 印字的相对位置：格式: [ystart, yend] 相对值，范围: [0, 1] (图像中胶囊的最高点为0.0, 最低点为1.0)
+          text_range:                     # 印字的相对位置 *1
             upper_positive:               # 上排帽在上
               - [0.2, 0.4]                # 当有多行文字时，设置多个范围
             upper_negative:               # 上排帽在下
@@ -96,7 +95,7 @@ aczn-algo >= 3.10.1
             check_cap: false        # (双色)是否检查囊帽？
             check_body: false       # (双色)是否检查囊体？
           crop:                     # crop的规则 (用于生成给深度推理用的小图)
-            policy: disable         # 裁切策略，可选：[disable, na, ng, ok] 详见[裁切规则](###裁切规则)
+            policy: disable         # 裁切策略，可选：[disable, na, ng, ok] *2
             margin: 2               # 裁切时多留出的边界
           shape:                    # 形状检查
             align_norm:             # 轮廓插值、对齐，逐像素计算距离的算法（目前性能不好，尚在开发中）
@@ -126,41 +125,44 @@ aczn-algo >= 3.10.1
 
 ```yaml
 
-    blob_detectors:
-      - colorspace: Lab
-        coi: 0
-        ksize: [23, 23]
-        scalar: 49
-        is_darker: true
-        textbox_weakener: 0.8
-        seambox_weakener: 0.8
-        y_range: [0.0, 1.0]
-        mask_from: all
-        mask_morph:
+    blob_detectors:                     # 内容为sequence，可以针对多种不同形态的斑点进行检测
+      - colorspace: Lab                 # src的颜色空间
+        coi: 0                          # src的通道index (和colorspace结合起来确定src)
+        ksize: [23, 23]                 # 动态阈值化时用到的ksize
+        scalar: 49                      # 填充outside像素时的灰度值
+        is_darker: true                 # true: 提取更深的 false: 提取更浅的
+        textbox_weakener: 0.8           # 弱化印字范围内的检出 0.0为最弱 1.0为不变 (以减少印字检测成黑点)
+        seambox_weakener: 0.8           # 弱化接缝范围内的检出 0.0为最弱 1.0为不变 (以减少接缝检测成黑点)
+        y_range: [0.0, 1.0]             # y方向的检测范围 *1
+        mask_from: all                  # 可选: [all, cap, body] 用于针对胶囊的某一部分检测
+        mask_morph:                     # 在 detect_mask 基础上的收缩范围
           type: [erode]
           ksize:
             - [7, 1]
-        params:
-          - thresholdStep: 1
-            minThreshold: 6
-            maxThreshold: 9
-            minRepeatability: 2
-            minDistBetweenBlobs: 5
-            filterByColor: false
-            blobColor: 255
-            filterByArea: true
-            minArea: 15
-            maxArea: 9999999
-            filterByCircularity: true
-            minCircularity: 0.3
-            maxCircularity: 1.0
-            filterByInertia: true
-            minInertiaRatio: 0.1
-            maxInertiaRatio: 1.0
-            filterByConvexity: true
-            minConvexity: 0.5
-            maxConvexity: 1.0
+        params:                         # 内容为sequence, 同一个输入可以有多组检测参数
+          - thresholdStep: 1            # (默认*3)阈值化时的步长
+            minThreshold: 6             # 阈值化阈值的最小值
+            maxThreshold: 7             # 阈值化阈值的最大值 (默认)通常 = minThreshold + 1 即可
+            minRepeatability: 1         # (默认)斑点检测的最小重复次数
+            filterByArea: true          # (默认)是否根据斑点的面积进行过滤
+            minArea: 15                 # 斑点检测的最小面积
+            maxArea: 9999999            # (默认)斑点检测的最大面积
+            filterByCircularity: true   # 是否根据圆度进行过滤
+            minCircularity: 0.3         # 斑点检测的最小圆度
+            maxCircularity: 1.0         # (默认)斑点检测的最大圆度
+            filterByInertia: true       # 是否根据惯性进行过滤
+            minInertiaRatio: 0.1        # 斑点检测的最小惯性比
+            maxInertiaRatio: 1.0        # (默认)斑点检测的最大惯性比
+            filterByConvexity: true     # 是否根据凸度进行过滤
+            minConvexity: 0.5           # 斑点检测的最小凸度
+            maxConvexity: 1.0           # (默认)斑点检测的最大凸度
 ```
+
+*1 [y_range格式](###y_range标准格式)
+
+*2 [裁切规则](###裁切规则)
+
+*3 注释"(默认)"开头的参数可以直接忽略不看
 
 ### params.yaml 
 
@@ -180,3 +182,20 @@ aczn-algo >= 3.10.1
 ### mask case 1/2/3 说明
 
 ![case flowchart](new-cim-algo-instruction/case_flowchart.png)
+
+## 注释
+
+### y_range标准格式
+
+- 使用相对值 
+- 格式：[ystart, yend] 
+- 范围: [0, 1]
+- 图像中胶囊的最上端为0.0, 最下端为1.0
+
+## 常见问题
+
+### 1. 我现在手里有老模板，如何能使用新算法？
+
+使用 Inspect Toolbox 中的自动转换工具
+
+![inspect toolbox convert](new-cim-algo-instruction/inspect-toolbox-convert.gif)
