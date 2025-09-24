@@ -4,6 +4,7 @@
 .. toctree::
    :maxdepth: 1
 
+   new-cim-algo-instruction
    capsule-calibration-procedure
    force-kick-adjust
    capsule-text-manual-calibration-sop
