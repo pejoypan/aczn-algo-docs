@@ -119,9 +119,9 @@ aczn-algo >= 3.10.1
 
 ```
 
-*1 [y_range格式](#y_range标准格式)
+*1 [y_range格式](#yrange-anchor)
 
-*2 [裁切规则](#裁切规则)
+*2 [裁切规则](#crop-anchor)
 
 ### detectors.yaml
 
@@ -170,6 +170,8 @@ aczn-algo >= 3.10.1
 
 ## 概念
 
+<a id="crop-anchor"></a>
+
 ### 裁切规则
 
 | crop规则 | 无胶囊裁切？ | ng胶囊裁切？ | ok胶囊裁切？ |
@@ -184,6 +186,8 @@ aczn-algo >= 3.10.1
 ![case flowchart](new-cim-algo-instruction/case_flowchart.png)
 
 ## 注释
+
+<a id="yrange-anchor"></a>
 
 ### y_range标准格式
 
