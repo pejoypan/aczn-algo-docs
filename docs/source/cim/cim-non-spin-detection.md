@@ -10,8 +10,8 @@
 
 如果相似度普遍很高，说明胶囊没转
 
-```{新版本算法}
-为了能检测无印字/无特征胶囊的不转，首先将相邻帧使用ECC做alignment，再用 absdiff→threshold→统计前景像素占比 的方式代替原来的感知哈希算法
+```{note}
+新版本：为了能检测无印字/无特征胶囊的不转，首先将相邻帧使用ECC做alignment，再用 absdiff→threshold→统计前景像素占比 的方式代替原来的感知哈希算法
 ```
 
 ![principle-non-spin](cim-non-spin-detection/principle-non-spin.png)
@@ -28,6 +28,10 @@ aczn-algo >= 3.9.1
 新算法目前只支持独立使用
 ```
 
+```{note}
+为方便使用，可以先用字符检建模工具，获取字符检对应的几个文件，再在其基础上进行修改
+```
+
 1. conf_inspect.yaml 需支持字符检
 ```yaml
 # conf_inspect.yaml
@@ -35,7 +39,7 @@ aczn-algo >= 3.9.1
 
     - capsule_detect:
         ...
-        unwrap_src: image_L # 该节点必须存在
+        unwrap_src: image_L # 该节点必须存在 (没有就加上)
         ...
     
     ...
