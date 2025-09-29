@@ -1,5 +1,15 @@
 # 📑 Changelog
 
+### 3.11.0
+
+> 2025-09-29
+
+合并 counting_machine 分支！
+
+- 新增command `counter_detect`
+- 新增command `update_SIM_result`
+- 支持读取 params#.counter.num_channel 作为 m_num
+
 ### 2025-09-24
 
 - 增加胶囊检新算法相关说明
