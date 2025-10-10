@@ -12,3 +12,4 @@
    cim-non-spin-detection
    image-split-model-conversion
    cim-text-inspect-tutorial
+   backlight-calibration-tutorial
