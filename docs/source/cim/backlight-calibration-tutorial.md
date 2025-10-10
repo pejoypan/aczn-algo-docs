@@ -72,24 +72,17 @@ flow:
 ### 3.1 分别对每种情况建模
 
 ```shell
-inspect_app.exe -c .\conf_cal-backlight-e.yaml -i <empty-img-name>.bmp -p .\params#.yaml -r params#-backlight-e.yaml
-inspect_app.exe -c .\conf_cal-backlight-f.yaml -i <filled-img-name>.bmp -p .\params#.yaml -r params#-backlight-f.yaml
-inspect_app.exe -c .\conf_cal-backlight-n.yaml -i <nan-img-name>.bmp -p .\params#.yaml -r params#-backlight-n.yaml
+inspect_app.exe -c conf_cal-backlight-e.yaml -i <empty-img-name>.bmp -p params#.yaml -r params#-backlight-e.yaml
+inspect_app.exe -c conf_cal-backlight-f.yaml -i <filled-img-name>.bmp -p params#.yaml -r params#-backlight-f.yaml
+inspect_app.exe -c conf_cal-backlight-n.yaml -i <nan-img-name>.bmp -p params#.yaml -r params#-backlight-n.yaml
 ```
 
 运行后，将会生成 `<imgname>-res.png` ，其中包含建模的可视化结果：
 
-Empty:
+| Empty | Filled | NA |
+| :---: | :---: | :---: |
+| ![empty-res](backlight-calibration-tutorial/empty-res.png) | ![filled-res](backlight-calibration-tutorial/filled-res.png) | ![na-res](backlight-calibration-tutorial/na-res.png) |
 
-![empty-res](backlight-calibration-tutorial/empty-res.png)
-
-Filled:
-
-![filled-res](backlight-calibration-tutorial/filled-res.png)
-
-NA:
-
-![na-res](backlight-calibration-tutorial/na-res.png)
 
 图中的数字，从上到下依次为：
 
@@ -151,7 +144,7 @@ else:
         print(f'✅ Merged to {saved_name}')
 ```
 
-合并完成后，以 e/f/n.yaml 结尾的文件不再需要
+合并完成后，以 "-e/f/n.yaml" 结尾的文件不再需要
 
 ### 3.3 对每个相机的图片进行建模
 
@@ -213,11 +206,8 @@ weights: [1.0, 0.0, 1.0, 0.0, 0.0, 0.0] # B_mean, G_mean, R_mean, B_stddev, G_st
 
 ```{important}
 离线测试和正常跑机的效果可能会不一样！
-
 正常跑机时，正面检的最后一次检测，会将胶囊的实时位置发送给后台；
-
 背光检时，会从后台接收胶囊的实时位置。
-
 当拥有了胶囊的实时位置后，检测将使用更精细的mask，而不是box，结果会更加准确。
 ```
 
@@ -259,7 +249,7 @@ backlight_detector:
 使用以下参数运行 inspect-app
 
 ```shell
-inspect_app.exe -c .\conf_inspect-backlight.yaml -d .\detectors0.yaml -p .\params#-backlight.yaml -i <test-img>.bmp
+inspect_app.exe -c conf_inspect-backlight.yaml -d detectors0.yaml -p params#-backlight.yaml -i <test-img>.bmp
 ```
 
 调参方式详见 “胶囊360调优手册”
