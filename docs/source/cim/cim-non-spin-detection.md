@@ -25,7 +25,7 @@ aczn-algo >= 3.9.1
 ## 用法
 
 ```{important}
-新算法目前只支持独立使用
+新算法目前只支持独立使用 (即：不能和常规字符检 capsule_text_detect 同时使用，after_text模式尚未开发)
 ```
 
 ```{note}

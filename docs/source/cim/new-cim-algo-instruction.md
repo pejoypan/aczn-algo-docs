@@ -130,7 +130,7 @@ aczn-algo >= 3.10.1
 ```yaml
 
     blob_detectors:                     # 内容为sequence，可以针对多种不同形态的斑点进行检测
-      - colorspace: Lab                 # src的颜色空间
+      - colorspace: Lab                 # 支持: [Lab, Luv, HSV, HLS, BGR, XYZ, YUV, YCrCb, Gray]
         coi: 0                          # src的通道index (和colorspace结合起来确定src)
         ksize: [23, 23]                 # 动态阈值化时用到的ksize
         scalar: 49                      # 填充outside像素时的灰度值
