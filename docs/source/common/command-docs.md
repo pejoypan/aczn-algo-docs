@@ -493,6 +493,14 @@ lhs and rhs must have the same size.
 `xywh` 在 3.9.7 版本开始引入
 ```
 
+```{important}
+当 arguments 中包含 --crop 时，如果 `extract_objects` 和 `capsule_detect_new` 同时出现，会造成每个胶囊裁切两次。TODO：暂时将其保存为同名文件解决！
+```
+
+```{important}
+2025.12.08 (3.11.7)：暂不支持从新版本胶囊检算法中读取 roi，因此新版深度部署应采用 predict
+```
+
 ## warp
 
 对图像的部分区域应用 warpAffine
