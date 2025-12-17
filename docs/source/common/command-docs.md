@@ -761,6 +761,8 @@ tablet:
 
 针对深度推理结果中的某个 label，检查其位置和大小
 
+通常放在 `predict` 等命令之后
+
 ```yaml
     - validate_detection_box:
         input: detection
@@ -776,7 +778,7 @@ tablet:
 | parameter      | description                                             | required? | default                  |
 | -------------- | ------------------------------------------------------- | --------- | ------------------------ |
 | input          | InferObject 包含深度推理结果                            | 必填 ⚠️    |                          |
-| target_label   | 待检查的 classname，支持 Scalar                         | 必填 ⚠️    |                          |
+| target_label   | 待检查的 classname，Scalar 格式                         | 必填 ⚠️    |                          |
 | which_detector | 指定 detector 的 title                                  | 选填 ✅    | detection_box_validator  |
 | channel_idx    | 待修改的 m_result_ 数组元素 id                          | 必填 ⚠️    |                          |
 | valid_num      | 合法的 classname 数量                                   | 选填 ✅    | 若不填则**跳过**数量检查 |
@@ -818,8 +820,8 @@ detection_box_validator:
 | 条件                                         | 缺陷结果       |
 | -------------------------------------------- | -------------- |
 | 总数量 != valid_num                          | Invalid_Num    |
-| center_x < min_x *or*<br />max_x < center_x       | Invalid_X      |
-| center_y < min_y *or*<br />max_y < center_y       | Invalid_Y      |
-| width < min_width *or*<br />max_width < width     | Invalid_Width  |
-| height < min_height *or*<br />max_height < height | Invalid_Height |
+| center_x < min_x *or*<br />center_x > max_x       | Invalid_X      |
+| center_y < min_y *or*<br />center_y > max_y       | Invalid_Y      |
+| width < min_width *or*<br />width > max_width     | Invalid_Width  |
+| height < min_height *or*<br />height > max_height | Invalid_Height |
 
