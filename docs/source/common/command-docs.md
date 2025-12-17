@@ -698,9 +698,55 @@ tablet:
 将结果 `m_result_` 中的所有 "Defect_A" 替换为 "Defect_B"
 
 ```{note}
-逗号后面的 description 会被舍弃
+所有结果，其逗号后面的 description 会被舍弃
 ```
 
 ```{warning}
 将其他结果替换为 "Good" 时应谨慎使用：后台只接受 "Good"，不接受 "Good@"
 ```
+
+## auto_presence_check_CIM
+
+针对胶囊背光检图片：
+- 判断每个通道的有无
+- 无需配置，兼容各种情况
+
+```yaml
+    - auto_presence_check_CIM:
+        src: image       # 必填
+        num_channels: 6  # 必填
+```
+
+- `src` 输入图像
+  - 应为背光检图像
+  - 可以是单通道灰度图或三通道彩色图
+  - 将作为缺陷绘制的原图
+    - 有胶囊：结果为 "Good", 绘制绿色框
+    - 无胶囊：结果为 "NA", 绘制红色框
+    - 方框内部为平均灰度值
+- `num_channels` 实际通道数
+  - 会根据此值 resize `m_result_`
+
+[Channel Position]
+    |
+    +-> Crop ROI
+    +-> Reduce (1-row)
+    +-> Mean Blur
+    +-> Threshold
+    +-> Morph Open
+    +-> Find Segments (consecutive 255)
+    |
+< Enough Found? >--(No)--> [Fail]
+    |
+  (Yes)
+    v
+[Presence Judge]
+    |
+    +-> Pick Top N Segments
+    +-> Window Width = Max Segment
+    +-> Generate Anchors (segment midpoint)
+    +-> Generate Sample Boxes
+    +-> Check Mean Gray
+    |
+    v
+< Presence? >
