@@ -647,3 +647,39 @@ tablet:
 
 - flow 中支持 tag
 - detector 中的格式与 infer_detector 中的单个class内容相同
+
+
+## chaos
+
+用于：
+- 模拟耗时
+- 生成fake结果
+  - 如果结果为 defect，会随机的绘制一条线、一个圆和一个矩形
+
+```yaml
+    - chaos:
+        src: image
+        duration: 1 # [1, 2]
+        result:
+          - { id: 0, type: NA@ }
+          - { id: 1, type: NA@ }
+```
+
+- `duration`:
+  - 必填项 ⚠️
+  - 模拟耗时时长，单位：ms
+    - Scalar 格式：固定耗时
+    - Seq 格式：随机耗时，在 `[min, max]` 按正态分布取值
+- `result`:
+  - 选填项 ✅
+  - 与正常 result 格式相同
+  - 若存在，则会直接覆盖 `m_result_`
+  - 覆盖时为直接赋值，不受 `missing_return_NG` 等配置的影响
+  - 每个元素为一个字典：
+    - `id`: 和数组 id 对应
+    - `type`: 除 "Good" 外应以 @ 结尾
+- `src`:
+  - 选填项 ✅
+  - 当结果有 defect 时：
+    - 若`src`存在，则作为绘制的原图
+    - 若不存在，则使用 640x480 的黑图
