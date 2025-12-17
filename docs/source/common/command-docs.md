@@ -707,11 +707,15 @@ tablet:
 
 ## auto_presence_check_CIM
 
-针对胶囊背光检图片：
+3.11.10 引入，针对胶囊背光检图片：
 - 判断每个通道的有无
 - 无需配置，兼容各种情况
 - 有胶囊：结果为 `Good` 绘制绿色框
 - 无胶囊：结果为 `NA` 绘制红色框
+
+```{important}
+对以下情况判断不准: 1. 透明空胶囊壳 2. 胶囊位置偏移>50%
+```
 
 ```yaml
     - auto_presence_check_CIM:
@@ -752,3 +756,70 @@ tablet:
     v
 < Presence? >
 ```
+
+## validate_detection_box
+
+针对深度推理结果中的某个 label，检查其位置和大小
+
+```yaml
+    - validate_detection_box:
+        input: detection
+        target_label: Batch_Number
+        which_detector: detection_box_validator
+        channel_idx: 0
+        valid_num: 1
+        sort_by: x #y
+        def_src: image_aligned
+        def_img: img_def
+```
+
+| parameter      | description                                             | required? | default                  |
+| -------------- | ------------------------------------------------------- | --------- | ------------------------ |
+| input          | InferObject 包含深度推理结果                            | 必填 ⚠️    |                          |
+| target_label   | 待检查的 classname，支持 Scalar                         | 必填 ⚠️    |                          |
+| which_detector | 指定 detector 的 title                                  | 选填 ✅    | detection_box_validator  |
+| channel_idx    | 待修改的 m_result_ 数组元素 id                          | 必填 ⚠️    |                          |
+| valid_num      | 合法的 classname 数量                                   | 选填 ✅    | 若不填则**跳过**数量检查 |
+| sort_by        | 可选: [x, y] <br />将推理结果按center x/y排序           | 选填 ✅    | x                        |
+| def_src        | 缺陷绘制的原图                                          | 必填 ⚠️    |                          |
+| def_img        | 若存在，则直接在之上绘图；<br />否则，将def_src复制过来 | 选填 ✅    |                          |
+
+### detection_box_validator 标准格式
+
+```yaml	
+# detectors.yaml
+detection_box_validator:
+  parameters:   # 示例为 Map 格式
+    min_x:      # center_x 的 min 
+      val: 0    # int
+    max_x:      # center_x 的 max
+      val: 1000 # int
+    min_y:      # center_y 的 min 
+      val: 0    # int
+    max_y:      # center_y 的 max
+      val: 1000 # int
+    min_width:  # detection_box 的 min width
+      val: 10   # int
+    max_width:  # detection_box 的 max width
+      val: 100  # int
+    min_height: # detection_box 的 min height
+      val: 10   # int
+    max_height: # detection_box 的 max height
+      val: 100  # int
+```
+
+支持 Map 和 Seq 两种格式：
+
+- Map 格式：所有 target 采用相同的 detector
+- Seq 格式：对所有 targets 排序后，第 i 个 target 使用第 i 个 detector
+
+### 缺陷条件&结果
+
+| 条件                                         | 缺陷结果       |
+| -------------------------------------------- | -------------- |
+| 总数量 != valid_num                          | Invalid_Num    |
+| center_x < min_x *or*<br />max_x < center_x       | Invalid_X      |
+| center_y < min_y *or*<br />max_y < center_y       | Invalid_Y      |
+| width < min_width *or*<br />max_width < width     | Invalid_Width  |
+| height < min_height *or*<br />max_height < height | Invalid_Height |
+
