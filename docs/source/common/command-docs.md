@@ -683,3 +683,24 @@ tablet:
   - 当结果有 defect 时：
     - 若`src`存在，则作为绘制的原图
     - 若不存在，则使用 640x480 的黑图
+
+## result_remap
+
+用于将结果映射为新的结果
+- 在踢废测试中较为实用
+
+```yaml
+    - result_remap:
+        remap_rule:
+          Defect_A: Defect_B
+```
+
+将结果 `m_result_` 中的所有 "Defect_A" 替换为 "Defect_B"
+
+```{note}
+逗号后面的 description 会被舍弃
+```
+
+```{warning}
+将其他结果替换为 "Good" 时应谨慎使用：后台只接受 "Good"，不接受 "Good@"
+```
