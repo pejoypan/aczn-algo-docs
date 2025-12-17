@@ -710,6 +710,8 @@ tablet:
 针对胶囊背光检图片：
 - 判断每个通道的有无
 - 无需配置，兼容各种情况
+- 有胶囊：结果为 `Good` 绘制绿色框
+- 无胶囊：结果为 `NA` 绘制红色框
 
 ```yaml
     - auto_presence_check_CIM:
@@ -721,12 +723,11 @@ tablet:
   - 应为背光检图像
   - 可以是单通道灰度图或三通道彩色图
   - 将作为缺陷绘制的原图
-    - 有胶囊：结果为 "Good", 绘制绿色框
-    - 无胶囊：结果为 "NA", 绘制红色框
     - 方框内部为平均灰度值
 - `num_channels` 实际通道数
   - 会根据此值 resize `m_result_`
 
+```
 [Channel Position]
     |
     +-> Crop ROI
@@ -750,3 +751,4 @@ tablet:
     |
     v
 < Presence? >
+```
