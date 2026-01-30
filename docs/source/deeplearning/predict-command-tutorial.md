@@ -35,14 +35,14 @@
 
 当满足下列任一条件时进入动态模式：   
 - src.size > 1   
-- dynamic\_shapes == true || input_shape == dynamic
+- dynamic_shapes == true || input_shape == dynamic
   
 ### 固定模式   
 > 输入图片必须为1个，图片固定为slice设置的尺寸。裁切后多张图片batch推理   
 
 当满足下列全部条件时进入固定模式：   
 - src.size == 1    
-- dynamic\_shapes == false || input_shape == fixed
+- dynamic_shapes == false || input_shape == fixed
   
 ### num   
 > 指单次提交推理的图片数量   
@@ -122,13 +122,13 @@ init:
   infer_models:
     - C:/opt/aczn_models/best_yolov8n.yaml
 ```
-则这里填 `model: best\_yolov8n` 
+则这里填 `model: best_yolov8n` 
 
 ```{warning}
 
 command 并不负责模型的初始化工作
 
-模型的初始化统一在 InspectProcessor::initialize\_generic 中进行
+模型的初始化统一在 InspectProcessor::initialize_generic 中进行
 
 command 只是根据名字，取得对应 model 的指针
 ```
@@ -151,13 +151,13 @@ command 只是根据名字，取得对应 model 的指针
 后续收集结果时会直接跳过 fake 输入对应的输出
 ```
 
-### skip\_all\_NA 
+### skip_all_NA 
 > 此项开启时，当前序flow判定所有通道都为NA时，直接跳过
 
 - bool 型，可填 true or false
 - 默认为 true
 
-### just\_infer
+### just_infer
 ```{warning}
 即将被弃用(当前版本低优先级工作)，使用新接口 `defect_policy`
 ```
@@ -166,10 +166,10 @@ command 只是根据名字，取得对应 model 的指针
 - bool 型，可填 true or false
 - 默认为 false
 - 开启时：
-    - 不会修改 m\_result\_ 
+    - 不会修改 m_result_ 
     - 会将 predictions 以 InferObject 形式放入 outputs 节点
 
-### not\_defect
+### not_defect
 ```{warning}
 即将被弃用(当前版本低优先级工作)，使用新接口 `defect_policy`
 ```
@@ -177,12 +177,12 @@ command 只是根据名字，取得对应 model 的指针
 
 - 默认为空   
 - 标准格式：`not_defect: [class_0, class_1, …]`   
-- not\_defect内的class：   
+- not_defect内的class：   
     - 不会画在画布上   
-    - 不会进入 m\_result\_   
+    - 不会进入 m_result_   
     - 会进入 outputs (如果存在) 
 
-### defect\_policy
+### defect_policy
 > 用于标志每个class是否被当作defect对待的策略
 
 - 支持的选项：
@@ -198,13 +198,13 @@ command 只是根据名字，取得对应 model 的指针
 
 在 initialize 中，会根据 DefectPolicyTable 的内部数据，确定最终的 defect_policy
 
-### prepend\_result   
+### prepend_result   
 > 若此项开启，在修改m_result_时，预测的结果会插入到头部，而不是尾部   
 
 - bool 型，可填 true or false   
 - 默认为 false 
 
-### dynamic\_shapes
+### dynamic_shapes
 ```{warning}
 即将被弃用(当前版本低优先级工作)，使用新接口 `input_shape`
 ```
@@ -213,7 +213,7 @@ command 只是根据名字，取得对应 model 的指针
 - bool型，可填 true or false   
 - 无默认值，没有该节点时不会触发相关逻辑
 
-### input\_shape
+### input_shape
 
 > 指定输入的shape模式
 
@@ -232,7 +232,7 @@ command 只是根据名字，取得对应 model 的指针
 - 内部逻辑：   
     - slices.size 会赋值给 num   
     - 裁切时，只会取合法的slice，如果遇到out of的情况，会报错并 return false   
-    - 如果存在合法的def\_pos，会修改对应的 m\_tablet\_bbox (用于跑马灯显示)   
+    - 如果存在合法的def_pos，会修改对应的 m_tablet_bbox (用于跑马灯显示)   
 - 标准格式:
 
 ```yaml
@@ -307,7 +307,7 @@ inspection:
 通常还需在后续搭配 `- update_SIM_result: {}` 以更新外层结果
 ```
 
-### def\_pos   
+### def_pos   
 > 标志每张图片/每个slice对应的def_pos，目前仅用于TCIM跑马灯显示效果   
 
 - 支持 tag   
@@ -332,12 +332,12 @@ crop:
 2025-06-04 目前应该存在bug，会将所有predictions都裁切保存，而不是filter后的
 ```
 
-### which\_detector   
+### which_detector   
 > 用于指定该command在 detector#.yaml中对应哪个detector   
 
 如果该节点不存在，默认为 `infer_detector` 
 
-### seg\_mask   
+### seg_mask   
 > 用于输出一张绘制着预测结果的mask   
 
 标准格式：`seg_mask: predict_mask`   
@@ -351,7 +351,7 @@ crop:
     > 即，对于class_0，以255绘制；对于class_1，以254绘制；… 
 
 
-### min\_contour\_size   
+### min_contour_size   
 > 仅用于分割模型的save_yolo功能，滤掉尺寸较小的contour   
 
 - 默认值： 0 
@@ -362,8 +362,8 @@ crop:
 - 数量应 == num   
 - 默认为空，即不使用   
 - 满足以下**任一**条件时，将会向其放入 pass filter 的 predictions：   
-    - command 工作在 just\_infer 模式   
-    - 该 class 不是defect (not\_defect 中包含该 prediction 的 label)    
+    - command 工作在 just_infer 模式   
+    - 该 class 不是defect (not_defect 中包含该 prediction 的 label)    
 
 **InferObject** 
 
@@ -376,15 +376,15 @@ crop:
 - vector<InferOutput>   
 - roi   
 - InferOutput 定义：   
-    - int label\_id   
+    - int label_id   
     - float confidence   
     - Rect box   
     - contours   
-    - string class\_name   
+    - string class_name   
     - Scalar color   
 
 用法举例：   
-- 数量检测：搭配 validate\_detection\_box   
+- 数量检测：搭配 validate_detection_box   
 - 尺寸检测：透明空胶囊的box被检查出来后，检测其高度宽度   
   
 
@@ -437,17 +437,17 @@ crop:
 
 ---
 
-## 使用inspect\_app时的相关arguments 
+## 使用inspect_app时的相关arguments 
 
 ### `--save_yolo`
-参见 [使用 inspect\_app 将 predictions 保存为 yolo 格式](https://pejoypan.any.org/inspect-app-save-yolo) 
+参见 [使用 inspect_app 将 predictions 保存为 yolo 格式](https://pejoypan.any.org/inspect-app-save-yolo) 
 
-## infer\_detector 设置
+## infer_detector 设置
 
 参见 [infer-detector-setting](infer-detector-setting.md)    
 
 ## TODOs 
 
-- 合并 counting\_machine 分支的优化改动   
-- 统一 fixed\_roi 和 dynamic\_shapes   
-- 统一 just\_infer 和 not\_defect   
+- 合并 counting_machine 分支的优化改动   
+- 统一 fixed_roi 和 dynamic_shapes   
+- 统一 just_infer 和 not_defect   
