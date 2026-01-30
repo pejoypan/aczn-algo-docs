@@ -6,10 +6,9 @@
         src: [image]              # 输入图像
         # src: [img0, img1, img2] # or 图像组 
         skip_all_NA: true         # 配置是否跳过全部NA的情况
-        just_infer: false         # 配置报缺陷还是只推理        
-        not_defect: [class_0, class_1, ...]  # 指定哪些不当作 defect
+        defect_policy: normal     # 配置缺陷策略，详见下文
         prepend_result: false     # if true，将结果插入到最前而不是最后
-        dynamic_shapes: false     # 定义每个slice的尺寸是动态还是固定
+        input_shape: dynamic      # dynamic: 动态模式 fixed: 静态模式
         slices:                   # 定义 slices，支持tag
           - [x, y, w, h]
           - [x, y, w, h]
@@ -20,7 +19,6 @@
             - [x, y, w, h]
           -                       # 对应 slices[1]
             - [x, y, w, h]
-        section_rois:
         crop:                     # 调试用，用于将prediction裁切并存储为png
           save: true/false        # crop save 开关
           padding: 5              # crop save 时的 padding
@@ -37,14 +35,14 @@
 
 当满足下列任一条件时进入动态模式：   
 - src.size > 1   
-- dynamic\_shapes == true   
+- dynamic\_shapes == true || input_shape == dynamic
   
 ### 固定模式   
 > 输入图片必须为1个，图片固定为slice设置的尺寸。裁切后多张图片batch推理   
 
 当满足下列全部条件时进入固定模式：   
 - src.size == 1    
-- dynamic\_shapes == false   
+- dynamic\_shapes == false || input_shape == fixed
   
 ### num   
 > 指单次提交推理的图片数量   
