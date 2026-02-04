@@ -825,3 +825,24 @@ detection_box_validator:
 | width < min_width *or*<br />width > max_width     | Invalid_Width  |
 | height < min_height *or*<br />height > max_height | Invalid_Height |
 
+## decode_bitmask
+
+用于将`predict`或`async_infer_fetch`生成的bitmask
+
+解码成针对每个class的单独mask
+
+```yaml
+    - predict:
+        bitmask: mask_output
+
+    - decode_bitmask:
+        src: mask_output
+        class_mask:
+          0: capsule_mask
+          1: cap_mask
+          2: body_mask
+```
+
+```{note}
+aczn-algo 3.12.0 引入
+```

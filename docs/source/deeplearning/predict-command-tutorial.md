@@ -24,6 +24,7 @@
           padding: 5              # crop save 时的 padding
         which_detector: xxxx_detector # 指定 detectors.yaml 中的 key
         seg_mask: image_xxxx      # 如果存在，会将预测结果绘制在 image_xxxx 上
+        bitmask: mask_output      # 若存在, 预测方框按二进制掩码 -> mask_output
         min_contour_size: 10      # save yolo 时使用，用于控制最小的contour
         outputs: [out0, out1, out2, ...]     # 输出的 InferObject
         def_src: image            # 缺陷绘制源
@@ -349,6 +350,15 @@ crop:
     2. 检测模型：绘制方框（填充）   
 4. 绘制使用的灰度为 `255 - label_id`   
     > 即，对于class_0，以255绘制；对于class_1，以254绘制；… 
+
+### bitmask
+> 用于输出一张使用**二进制掩码**绘制着预测结果的bitmask，解决了seg_mask无法处理多class重叠的问题   
+
+- 输出的bitmask为 CV_16UC1 类型
+- 因此**最多**支持 16 个 class
+- 只绘制方框，不绘制轮廓
+- 每个class的mask为一个bit，第i位为1表示该class在该位置有预测结果，为0表示没有
+- Class 0 -> 1, Class 1 -> 2, Class 2 -> 4, Class 3 -> 8...
 
 
 ### min_contour_size   
