@@ -5,3 +5,4 @@
    :maxdepth: 1
 
    command-docs
+   unified-interface
