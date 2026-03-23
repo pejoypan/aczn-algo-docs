@@ -759,32 +759,49 @@ tablet:
 
 ## validate_detection_box
 
-针对深度推理结果中的某个 label，检查其位置和大小
+针对深度推理结果中的某个 label，检查其位置和大小, 通常放在 `predict` 等命令之后
 
-通常放在 `predict` 等命令之后
+1. **数量验证**：检查检测到的目标数量是否符合条件（等于/大于等于/小于等于/范围等）
+2. **位置验证**：检查目标中心点是否在指定范围内（x, y坐标）
+3. **尺寸验证**：检查目标框的宽高是否在指定范围内
 
 ```yaml
     - validate_detection_box:
-        input: detection
-        target_label: Batch_Number
-        which_detector: detection_box_validator
-        channel_idx: 0
-        valid_num: 1
-        sort_by: x #y
-        def_src: image_aligned
-        def_img: img_def
+        input: [detection_1, detection_2, detection_3]
+        channel_idx: [0, 1, 2]
+        target_label: capsule
+        valid_num:
+          ge: 1        # 至少检测到一个目标
+        sort_by: x
+        def_src: source_image
+        def_img: defect_canvas
 ```
 
-| parameter      | description                                             | required? | default                  |
-| -------------- | ------------------------------------------------------- | --------- | ------------------------ |
-| input          | InferObject 包含深度推理结果                            | 必填 ⚠️    |                          |
-| target_label   | 待检查的 classname，Scalar 格式                         | 必填 ⚠️    |                          |
-| which_detector | 指定 detector 的 title                                  | 选填 ✅    | detection_box_validator  |
-| channel_idx    | 待修改的 m_result_ 数组元素 id                          | 必填 ⚠️    |                          |
-| valid_num      | 合法的 classname 数量                                   | 选填 ✅    | 若不填则**跳过**数量检查 |
-| sort_by        | 可选: [x, y] <br />将推理结果按center x/y排序           | 选填 ✅    | x                        |
-| def_src        | 缺陷绘制的原图                                          | 必填 ⚠️    |                          |
-| def_img        | 若存在，则直接在之上绘图；<br />否则，将def_src复制过来 | 选填 ✅    |                          |
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| input | scalar / sequence | ✅ | 输入的推理结果名称。支持单个字符串或字符串数组 |
+| channel_idx | int / sequence | ✅ | 结果通道索引，对应 m_result_ 的位置。支持单个整数或整数数组 |
+| target_label | scalar | ✅ | 要检测的目标类别名称 |
+| def_src | scalar | ✅ | 缺陷画布的底图源图像 |
+| def_img | scalar | - | 缺陷画布输出名称 [default: $$DEFECT_DETECTION_BOX] |
+| which_detector | scalar | - | 使用的检测器配置名称 [default: detection_box_validator]。若不提供，则跳过位置/尺寸验证 |
+| valid_num | int / map | - | 目标数量验证条件 [default: 无，不验证数量] |
+| sort_by | scalar | - | 目标排序方式：x（按x坐标）/ y（按y坐标）[default: x] |
+
+### valid_num 格式
+
+支持多种判断逻辑：
+
+```yaml
+valid_num: 5 # 等于（向后兼容）
+valid_num:
+  eq: 5 # 等于
+  ge: 2 # 大于等于
+  le: 10 # 小于等于
+  gt: 1 # 大于
+  lt: 5 # 小于
+  range: [2, 5] # 范围 [min, max]
+```
 
 ### detection_box_validator 标准格式
 
@@ -810,20 +827,20 @@ detection_box_validator:
       val: 100  # int
 ```
 
-支持 Map 和 Seq 两种格式：
-
-- Map 格式：所有 target 采用相同的 detector
-- Seq 格式：对所有 targets 排序后，第 i 个 target 使用第 i 个 detector
-
 ### 缺陷条件&结果
 
 | 条件                                         | 缺陷结果       |
 | -------------------------------------------- | -------------- |
-| 总数量 != valid_num                          | Invalid_Num    |
+| 数量不满足 valid_num 条件                       | Invalid_Num    |
 | center_x < min_x *or*<br />center_x > max_x       | Invalid_X      |
 | center_y < min_y *or*<br />center_y > max_y       | Invalid_Y      |
 | width < min_width *or*<br />width > max_width     | Invalid_Width  |
 | height < min_height *or*<br />height > max_height | Invalid_Height |
+
+### 注意事项
+
+1. **input 和 channel_idx 数量必须匹配**：当使用数组形式时，两个数组长度必须一致
+2. **standard 可选**：若不提供 standard，则只验证目标数量，不检查位置和尺寸
 
 ## decode_bitmask
 
