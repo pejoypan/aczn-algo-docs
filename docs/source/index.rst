@@ -16,4 +16,5 @@ Contents
    cim/index
    tcim/index
    deeplearning/index
+   sim/index
    changelog
