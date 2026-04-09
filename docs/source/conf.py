@@ -3,11 +3,11 @@
 # -- Project information
 
 project = 'ACZN Algo Docs'
-copyright = '2025, Pejoy Pan'
+copyright = '2026, Pejoy Pan'
 author = 'Pejoy Pan'
 
 release = '0.1'
-version = '3.10.11'
+version = '3.14.2'
 
 # -- General configuration
 
