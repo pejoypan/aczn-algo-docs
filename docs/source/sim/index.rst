@@ -1,4 +1,4 @@
-💊 CIM Related
+🔢 SIM Related
 =========
 
 .. toctree::
