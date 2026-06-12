@@ -17,11 +17,6 @@ init:
   use_infer_at_cal: false
   min_version: 3.15.3
   identifier: user-defined-string
-  blob_colors:
-    - [255, 0, 0]
-    - [0, 255, 0]
-    - [0, 0, 255]
-    - [255, 255, 0]
   infer_models:
     - ./models/capsule_det.onnx
     - ./models/defect_seg.onnx
@@ -103,19 +98,6 @@ flow:
 - **Type**: scalar (string)
 - **Default**: empty (no check)
 - **Description**: Minimum required algorithm library version, specified as a dot-separated string such as `"3.10.0"`. If the runtime library version is lower than the required version, initialization fails with an error. Both keys are accepted for backward compatibility; `min_version` takes precedence if both are present.
-
-### blob_colors
-- **Required**: ❌
-- **Type**: sequence of integer sequences (RGB triplets)
-- **Default**: empty
-- **Description**: A list of predefined colors used for blob visualization or annotation. Each entry is a 3-element sequence `[R, G, B]`.
-
-```yaml
-  blob_colors:
-    - [255, 0, 0]    # red
-    - [0, 255, 0]    # green
-    - [0, 0, 255]    # blue
-```
 
 ### infer_models
 - **Required**: ❌ (required by `predict` & `async_infer_submit` command)

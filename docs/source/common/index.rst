@@ -7,3 +7,4 @@
    init-node
    command-docs
    unified-interface
+   log-viewing-guide
