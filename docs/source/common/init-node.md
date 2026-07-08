@@ -20,6 +20,14 @@ init:
   infer_models:
     - ./models/capsule_det.onnx
     - ./models/defect_seg.onnx
+  force_kick:
+    lb: 0.8
+    ub: 1.25
+  default_tablet_bbox:
+    - top_left: [0, 0, 480, 240]
+      top_right: [480, 0, 480, 240]
+      btm_left: [0, 240, 480, 240]
+      btm_right: [480, 240, 480, 240]
 
 flow:
   commands:
@@ -104,6 +112,21 @@ flow:
 - **Type**: sequence of strings
 - **Default**: empty
 - **Description**: List of model file paths to register with the `infer_api` model manager at initialization time. Each path must point to an existing file. The model name (filename without extension) is used as the internal lookup key.
+
+### force_kick
+- **Required**: ❌
+- **Type**: map
+- **Default**: `{lb: 0.8, ub: 1.25}`
+- **Description**: Thresholds used by capsule and tablet engines to force-tag a defect when a contour metric (area, width, or height ratio) deviates significantly from the reference. If the measured ratio is below `lb` or above `ub`, the defect type is prefixed with a category such as `Half - ` or `Multiple - `.
+- **Sub-fields**:
+  - `lb`: scalar (float), lower bound ratio. Must satisfy `0 < lb < 1`. Default `0.8`.
+  - `ub`: scalar (float), upper bound ratio. Must satisfy `ub > 1`. Default `1.25`.
+
+### default_tablet_bbox
+- **Required**: ❌
+- **Type**: sequence of maps
+- **Default**: derived from `params.yaml` (`tablet.*.rois`) when available
+- **Description**: Provides default tablet bounding boxes per channel before any detection runs. The sequence length must equal the number of tablet channels (`m_num`). Each map may contain orientation keys such as `front`, `top_left`, `top_right`, `btm_left`, `btm_right`, and `3D`, each mapping to a rectangle (`cv::Rect`).
 
 ## Params.yaml Overrides
 
