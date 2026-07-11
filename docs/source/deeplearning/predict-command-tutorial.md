@@ -369,13 +369,11 @@ crop:
 - 不影响缺陷检测、`seg_mask` 和 `outputs`
 - 支持两种格式：
 
-**全局限制**
 ```yaml
+# 全局限制
 top_k: 3
-```
 
-**按 class 限制**
-```yaml
+# 按 class 限制
 top_k:
   Class_A: 5
   Class_B: 3
