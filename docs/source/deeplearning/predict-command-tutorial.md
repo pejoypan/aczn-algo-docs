@@ -1,5 +1,5 @@
 # Predict Command Tutorial   
-## predict 基本功能   
+## Example 
 ```yaml
     - predict:
         model: model              # 在此处指定模型(infer_models中路径的stem)，支持tag
@@ -25,6 +25,7 @@
         which_detector: xxxx_detector # 指定 detectors.yaml 中的 key
         seg_mask: image_xxxx      # 如果存在，会将预测结果绘制在 image_xxxx 上
         bitmask: mask_output      # 若存在, 预测方框按二进制掩码 -> mask_output
+        top_k: 3                # 仅对 bitmask 生效，按置信度保留前 k 个结果
         min_contour_size: 10      # save yolo 时使用，用于控制最小的contour
         outputs: [out0, out1, out2, ...]     # 输出的 InferObject
         def_src: image            # 缺陷绘制源
@@ -359,6 +360,29 @@ crop:
 - 只绘制方框，不绘制轮廓
 - 每个class的mask为一个bit，第i位为1表示该class在该位置有预测结果，为0表示没有
 - Class 0 -> 1, Class 1 -> 2, Class 2 -> 4, Class 3 -> 8...
+
+
+### top_k
+> 用于限制 `bitmask` 中每个 class 绘制的预测结果数量，按 confidence 取前 k 个
+
+- **只在 `bitmask` 输出存在时生效**
+- 不影响缺陷检测、`seg_mask` 和 `outputs`
+- 支持两种格式：
+
+**全局限制**
+```yaml
+top_k: 3
+```
+
+**按 class 限制**
+```yaml
+top_k:
+  Class_A: 5
+  Class_B: 3
+```
+
+- 当使用 map 格式时，未指定的 class 不受限制
+- 默认不启用，相当于未配置 `top_k`
 
 
 ### min_contour_size   
