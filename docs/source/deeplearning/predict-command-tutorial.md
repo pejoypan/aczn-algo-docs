@@ -353,6 +353,9 @@ crop:
     > 即，对于class_0，以255绘制；对于class_1，以254绘制；… 
 
 ### bitmask
+```{note}
+aczn-algo **3.12.5** 引入
+```
 > 用于输出一张使用**二进制掩码**绘制着预测结果的bitmask，解决了seg_mask无法处理多class重叠的问题   
 
 - 输出的bitmask为 CV_16UC1 类型
@@ -363,6 +366,9 @@ crop:
 
 
 ### top_k
+```{note}
+aczn-algo **3.15.6** 引入
+```
 > 用于限制 `bitmask` 中每个 class 绘制的预测结果数量，按 confidence 取前 k 个
 
 - **只在 `bitmask` 输出存在时生效**
