@@ -691,8 +691,8 @@ tablet:
 
 ```yaml
     - result_remap:
-        remap_rule:
-          Defect_A: Defect_B
+        Defect_A: Defect_B
+        Defect_C: Defect_D
 ```
 
 将结果 `m_result_` 中的所有 "Defect_A" 替换为 "Defect_B"
@@ -704,6 +704,29 @@ tablet:
 ```{warning}
 将其他结果替换为 "Good" 时应谨慎使用：后台只接受 "Good"，不接受 "Good@"
 ```
+
+### NA 通道打叉（可选）
+
+当 remap 产生 NA 通道时（例如 `Good: NA`），可在缺陷图上为这些通道绘制红色 X 标记。
+若当前没有任何命令生成过缺陷图，则从 `def_src` 拷贝一张作为画布。
+这样"全部通道均无检出"的帧也能保证下游取到缺陷图。
+
+```yaml
+    - result_remap:
+        inner_capsule_OK: Good
+        Good: NA
+        def_src: image          # 无缺陷图时的拷贝源
+        def_img: image_defect   # 缺陷图名称，应与 predict 的 def_img 一致
+        channel_rois:           # 下标即通道号，每通道一个 [x, y, w, h]
+          - [0, 0, 171, 896]
+          - [171, 0, 171, 896]
+```
+
+- `channel_rois` 即功能开关：不配置时行为与之前完全一致
+- `channel_rois` 必须与 `def_src`、`def_img` 同时配置，否则初始化失败
+- 只为本次 remap **新产生**的 NA 通道打叉；前序命令已判定的 NA 通道不会重复打叉。NA 判定使用 `SingleResult::NA()` 谓词（`No Capsule` / `No_Tablet` / `pack missing` / `NA` 前缀）
+- `channel_rois` 数量少于通道数时，越界的通道仅告警并跳过标记
+- 已有缺陷图时直接在原图上补画，不会覆盖已有标注
 
 ## auto_presence_check_CIM
 
