@@ -37,13 +37,18 @@ rotate_max_backup_files: 10
 open_mode: a
 ```
 
-| 配置项 | 说明 |
-|--------|------|
-| `log_level` | 日志级别：`TRACE`（最详细）/ `DEBUG` / `INFO` / `WARNING` / `ERROR` |
-| `log_path` | 日志输出目录，支持相对路径 |
-| `rotate_max_file_size` | 单个日志文件上限，如 `100MB`、`1GB` |
-| `rotate_max_backup_files` | 保留的备份数量 |
-| `open_mode` | `a` 追加，`w` 覆盖。建议保持 `a` |
+| 配置项 | 默认值 | 说明 |
+|--------|--------|------|
+| `log_level` | `INFO` | `TRACE`（最详细）/ `DEBUG` / `INFO` / `WARNING`（或 `WARN`）/ `ERROR` |
+| `log_path` | Windows `C:/opt/aczn_logdir`；Linux `/opt/aczn_logdir` | 日志输出目录，支持相对路径 |
+| `log_format` | `%(time) %(short_source_location:<25) %(log_level:<5) %(logger:<10)  %(message)` | 日志格式串，一般无需修改 |
+| `rotate_max_file_size` | `1GB` | 单个日志文件上限 |
+| `rotate_max_backup_files` | `10` | 保留的备份数量 |
+| `rotate_on_creation` | `true` | 每次启动先做一次滚动 |
+| `open_mode` | `a` | `a` 追加，`w` 覆盖。建议保持 `a` |
+| `sink_flush_interval_ms` | `200` | 日志落盘的最小间隔（毫秒） |
+
+> 配置文件不存在或解析失败时使用上表默认值；配置文件里未出现的项也沿用默认值（`TRACE` 实际映射为 `TraceL3`）。
 
 ## 3. 查看日志
 
