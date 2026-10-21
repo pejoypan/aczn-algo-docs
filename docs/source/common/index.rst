@@ -4,5 +4,7 @@
 .. toctree::
    :maxdepth: 1
 
+   init-node
    command-docs
    unified-interface
+   log-viewing-guide
