@@ -164,6 +164,29 @@ aczn-algo >= 3.10.1
 
 *3 注释"(默认)"开头的参数可以直接忽略不看
 
+#### 分姿态参数
+
+```{note}
+aczn-algo 3.17.7 引入
+```
+
+> `capsule_detector.parameters` 广播到全部 4 种姿态（上/下 × 正/反），使用 `parameters_by_pose` 可以精确调某一姿态的容差范围。（不存在的继承全局值）
+
+```yaml
+capsule_detector:
+  parameters:                 # 必填，全局默认值
+    capsule_height_lb: 0.95
+    capsule_height_ub: 1.05
+  parameters_by_pose:         # 可选，按姿态覆盖
+    lower_positive: {capsule_height_lb: 0.94, capsule_height_ub: 1.06}
+    lower_negative: {capsule_height_lb: 0.94, capsule_height_ub: 1.06}
+```
+
+- 姿态名：`upper_positive` / `upper_negative` / `lower_positive` / `lower_negative`
+- 键名与 `parameters` 一致，只需写要改的键
+- `hole_tol` / `blob_detectors` / `topconcave_scores_ub` 不支持分姿态
+- 方向判断失败时用全局值
+
 ### params.yaml 
 
 可以直接沿用旧模板，需要增加 img_size 字段
