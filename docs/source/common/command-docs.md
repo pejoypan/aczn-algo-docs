@@ -10,10 +10,12 @@ This document records the image processing commands, as well as the optional par
     - load_image:
         image: image  # input
         path: xxxx    # loading path
+        zero_copy: false  # optional, default true
 ```
 
 - image: (*required*) [scalar] 
 - path: (*required*) [scalar] specify image loading path.
+- zero_copy: (*optional*) [scalar] [default: true] 输入来自 `FROM_UPSTREAM__` 时是否直接引用调用方缓冲区；`false`（或 `0`）克隆一份私有副本。上游图像非连续（ROI 视图）时始终克隆。开启时 flow 不得向该名字写回像素，否则会污染调用方传入的图像。
 
 ## load_images
 
@@ -886,3 +888,70 @@ detection_box_validator:
 ```{note}
 aczn-algo 3.12.0 引入
 ```
+
+## tally
+
+统计推理结果中的 class 命中次数，作为证据写入 `SingleResult::tally`；不修改 `type`，也不绘制缺陷。
+
+```yaml
+    - tally:
+        input: [text0, text1]   # required, InferObject 名称列表
+        idxs: [0, 0]            # optional, 默认 [0, 1, ...]，长度须与 input 一致
+        keys: [text]            # optional, 配置后只统计列出的 key 并预填 0
+```
+
+- `input`: (*required*) [sequence] 每个 slice 的 `InferObject` 名称。
+- `idxs`: (*optional*) [sequence] 每个输入对应的结果通道；同一个通道可重复，命中数累加。
+- `keys`: (*optional*) [sequence] 不配置时为 count-all 模式，统计所有非空 class 名；配置后只统计列出的 key，并为每个被引用且非 NA 的通道预填 `0`。
+
+```{important}
+- 被计数的 class 必须在 `predict` 中配置为非缺陷（`defect_policy: none` 或 `{text: false}`），否则不会进入 `InferObject::m_outputs`。
+- `tally` 统计的是经过 `infer_detector` 过滤后的结果。
+- NA 通道不会产生 `tally`。
+```
+
+```yaml
+# 输出示例
+- id: 0
+  type: Good
+  tally: {text: 2}
+- id: 1
+  type: "No Capsule"
+  # 无 tally
+```
+
+完整用法见 [Tally / Tally Vote 命令](../deeplearning/tally-command-tutorial.md)。
+
+## tally_vote
+
+无图 flow 命令：读取后台按 `[channel][shot]` 拼好的多拍结果，对每个 `tally` key 统计「出现过命中的拍数」，按规则生成最终裁决。
+
+```yaml
+    - tally_vote:
+        rules:
+          - key: text
+            valid_num: {ge: 1}   # 通过条件：至少 1 拍看到 text
+            defect: No_Text      # 条件不满足时追加
+```
+
+```yaml
+# params.yaml
+tally_vote:
+  num_channels: 6
+```
+
+- `rules`: (*required*) [sequence] 非空规则列表；每条规则必须包含 `key`、`valid_num`、`defect`，`key` 不能重复。
+- `valid_num`: (*required*) [map] 单比较符的通过条件：`eq` / `ge` / `gt` / `le` / `lt` / `range: [min, max]`。
+- `defect`: (*required*) [scalar] 条件不满足时追加到 `type` 的缺陷名。
+- `tally_vote.num_channels`: (*required* for multi-channel) 决定 `m_result_` 的通道数，必须等于输入通道数。
+
+```{note}
+- 输入必须通过 `Execute(const YAML::Node&)` 传入，形状为 `[channel][shot]`。
+- NA shot 不参与投票；整通道全 NA 时原样输出 NA；已 NG 的通道保留原判。
+- 一拍对一个 key 最多贡献 1 票，`tally` 的数值大小被忽略。
+- 输出只保留 `id / type / def_pos`，不包含 `tally`。
+- 无图 flow 的缺陷图需调用 `GetDefectImage(defects, tag, true)`。
+- 复用 processor 时，每次 `Execute()` 前先调用 `cleandata()`。
+```
+
+完整的数据格式、投票顺序和对接示例见 [Tally / Tally Vote 命令](../deeplearning/tally-command-tutorial.md)。

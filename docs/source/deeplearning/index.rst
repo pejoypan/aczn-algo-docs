@@ -5,6 +5,7 @@
    :maxdepth: 1
 
    predict-command-tutorial
+   tally-command-tutorial
    infer-detector-setting
    new-model-deployment
    save-yolo-predictions-by-inspect-app
